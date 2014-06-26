@@ -85,9 +85,9 @@ function process_month($handle, &$strikes, $type)
 function process_strike(&$strikes, $s, $type)
 {
     $s = trim($s);
-    $strike = preg_split('/\s+/', $s);
-    $curStrike = isset($strike[STRIKE_POS]) ? $strike[STRIKE_POS] : '';
-    $curInterest = isset($strike[INTEREST_POS]) ? $strike[INTEREST_POS] : '';
+    $curStrike = (int) substr($s, 0, 9);
+    $curInterest = (int) substr($s, 98, 12);
+
     $newStrike = isset($strikes[$curStrike]) ? $strikes[$curStrike] : array();
     $newStrike[$type] = $curInterest;
     $strikes[$curStrike] = $newStrike;
