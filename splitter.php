@@ -16,7 +16,7 @@ function change_working_dir()
 
 function dump_strikes($strikes)
 {
-    unlink(OUTPUT);
+    if (file_exists(OUTPUT)) unlink(OUTPUT);
     file_put_contents(OUTPUT, 'strike;put;call' . PHP_EOL, FILE_APPEND);
     foreach ($strikes as $strike => $interests) {
         $call = isset($interests['call']) ? $interests['call'] : 0;
