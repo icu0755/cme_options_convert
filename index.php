@@ -11,9 +11,6 @@ $symbols = array(
     'ZN' => 'nzdusd',
     'OF' => 'chfusd',
 );
-$symbols = array(
-    'OB' => 'gbpusd',
-);
 $app = new \Cme\Application();
 $app->setTimezone('Europe/Moscow')
     ->setDirectory(date('Ymd'))
