@@ -4,7 +4,7 @@
 namespace Cme;
 
 require_once 'Parser.php';
-require_once 'Report.php';
+require_once 'ReportHtml.php';
 
 class Application
 {
@@ -41,7 +41,7 @@ class Application
             $this->debug('Process symbol: ' . $symbol);
             $time = time();
 
-            $report = new Report($symbol);
+            $report = new ReportHtml($symbol);
             $this->parser->setCode($code)->setReport($report);
             $this->parser->parse();
 

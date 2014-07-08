@@ -10,11 +10,14 @@ class Report
     protected $filename;
     protected $handle;
     protected $strikes;
+    protected $symbol;
     protected $minInterest;
 
-    function __construct($filename)
+    function __construct($symbol)
     {
-        if ($this->fileext !== substr($filename, -4)) $filename .= $this->fileext;
+        $this->symbol = trim($symbol);
+        $filename = $this->symbol;
+        if ($this->fileext !== substr($this->symbol, -4)) $filename .= $this->fileext;
         $this->filename = $filename;
         $this->strikes = array();
     }

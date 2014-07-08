@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="<%path%>reset.css" />
+    <link rel="stylesheet" href="<%path%>style.css" />
+</head>
+<body>
+<div class="chart"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script>
+    $(document).ready(function(){
+        $('.chart').highcharts({
+            colors: ['#db8409', '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
+                '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'],
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: '<%symbol%>'
+            },
+            xAxis: {
+                categories: <%strikes%>,
+                reversed: false
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Open interest'
+                }
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
+            series: [{
+                name: 'Call',
+                data: <%call%>
+            }, {
+                name: 'Put',
+                data: <%put%>
+            }]
+        });
+    });
+</script>
+</body>
+</html>
