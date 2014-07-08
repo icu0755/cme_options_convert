@@ -5,13 +5,13 @@ $codes = array();
 if ($handle = fopen('20140626/stlcur.txt', 'r')) {
     while ($s = fgets($handle)) {
         if (false !== strpos($s, 'OPTIONS')) {
-            $parts = explode(' ', $s);
+            $parts = explode(' ', trim($s));
             $code = array_shift($parts);
             if (!array_key_exists($code, $codes)) {
                 $name = array();
                 $date = array_shift($parts);
                 $part = array_shift($parts);
-                while ('OPTIONS' !== $part && !is_null($part)) {
+                while ('CALL' !== $part && 'PUT' !== $part && !is_null($part)) {
                     $name[] = $part;
                     $part = array_shift($parts);
                 }

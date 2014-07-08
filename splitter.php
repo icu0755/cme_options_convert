@@ -1,7 +1,8 @@
 <?php
+include 'Cme/Strike.php';
 const STRIKE_POS = 0;
 const INTEREST_POS = 10;
-const EURO_OPTION_CODE = 'ZC';
+const EURO_OPTION_CODE = 'OB';
 const OUTPUT = 'output.csv';
 const DATA = 'ftp://ftp.cmegroup.com/pub/settle/stlcur';
 
@@ -58,8 +59,8 @@ function process_file($name)
     $handle = fopen($name, 'r');
     if ($handle) {
         while ($s = fgets($handle)) {
-            $isJulyCall = is_option($s, EURO_OPTION_CODE, 'JLY') && is_call($s);
-            $isJulyPut = is_option($s, EURO_OPTION_CODE, 'JLY') && is_put($s);
+            $isJulyCall = is_option($s, EURO_OPTION_CODE, 'AUG14') && is_call($s);
+            $isJulyPut = is_option($s, EURO_OPTION_CODE, 'AUG14') && is_put($s);
             if ($isJulyPut) process_month($handle, $strikes, 'put');
             if ($isJulyCall) process_month($handle, $strikes, 'call');
         }
