@@ -42,7 +42,7 @@ class Report
                 $count++;
             }
         }
-        return round($sum/$count);
+        return 0 == $count ? 0 : round($sum/$count);
     }
 
     public function save()

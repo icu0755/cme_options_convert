@@ -46,8 +46,9 @@ class Application
             $this->parser->parse();
 
             // save report
-            $avg = $report->getAverage();
-            $report->setMinInterest($avg);
+            if ($avg = $report->getAverage()) {
+                $report->setMinInterest($avg);
+            }
             $report->save();
 
             // output statistics
