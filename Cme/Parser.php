@@ -63,7 +63,6 @@ class Parser
                 }
             }
             fclose($this->handle);
-            $this->report->save();
         }
     }
 

@@ -10,6 +10,7 @@ class Report
     protected $filename;
     protected $handle;
     protected $strikes;
+    protected $minInterest;
 
     function __construct($filename)
     {
@@ -26,6 +27,22 @@ class Report
         }
 
         $this->strikes[$strike][$type] = $interest;
+    }
+
+    public function getAverage()
+    {
+        $sum = $count = 0;
+        foreach ($this->strikes as $interest) {
+            if ($interest['call'] > 100) {
+                $sum += $interest['call'];
+                $count++;
+            }
+            if ($interest['put'] > 100) {
+                $sum += $interest['put'];
+                $count++;
+            }
+        }
+        return round($sum/$count);
     }
 
     public function save()
@@ -48,11 +65,21 @@ class Report
     {
         $call = isset($interest['call']) ? $interest['call'] : 0;
         $put = isset($interest['put']) ? $interest['put'] : 0;
-        fputs($this->handle, $this->format($strike, $put, $call));
+        if (!isset($this->minInterest) || ($call + $put) > $this->minInterest) {
+            fputs($this->handle, $this->format($strike, $put, $call));
+        }
     }
 
     protected function format($strike, $put, $call)
     {
         return $strike . ';' . $put . ';' . $call . PHP_EOL;
+    }
+
+    /**
+     * @param mixed $minInterest
+     */
+    public function setMinInterest($minInterest)
+    {
+        $this->minInterest = $minInterest;
     }
 }

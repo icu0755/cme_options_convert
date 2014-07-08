@@ -40,11 +40,20 @@ class Application
         foreach ($this->symbols as $code => $symbol) {
             $this->debug('Process symbol: ' . $symbol);
             $time = time();
+
             $report = new Report($symbol);
             $this->parser->setCode($code)->setReport($report);
             $this->parser->parse();
+
+            // save report
+            $avg = $report->getAverage();
+            $report->setMinInterest($avg);
+            $report->save();
+
+            // output statistics
             $time = time() - $time;
             $this->debug('Time: ' . $time . ' sec');
+            $this->debug('Average: ' . $avg);
         }
     }
 
