@@ -2,8 +2,6 @@
 
 namespace Cme\MarketData;
 
-require_once 'RowAbstract.php';
-
 class Option extends RowAbstract
 {
     protected $type = 'option';

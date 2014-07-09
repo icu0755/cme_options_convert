@@ -2,8 +2,6 @@
 
 namespace Cme;
 
-require_once 'Report.php';
-
 class ReportHtml extends Report
 {
     protected $fileext = '.htm';

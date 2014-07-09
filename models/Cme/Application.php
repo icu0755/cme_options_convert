@@ -3,9 +3,6 @@
 
 namespace Cme;
 
-require_once 'Parser.php';
-require_once 'ReportHtml.php';
-
 class Application
 {
     const MARKET_DATA_URL = 'ftp://ftp.cmegroup.com/pub/settle/stlcur';

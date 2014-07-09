@@ -4,10 +4,6 @@
 namespace Cme;
 
 
-require_once 'MarketData\Other.php';
-require_once 'MarketData\Strike.php';
-require_once 'MarketData\Option.php';
-
 class Parser
 {
     /**

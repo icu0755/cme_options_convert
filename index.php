@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Cme\Application.php';
+require_once 'vendor/autoload.php';
 
 $symbols = array(
     'ZA' => 'audusd',
@@ -13,7 +13,7 @@ $symbols = array(
 );
 $app = new \Cme\Application();
 $app->setTimezone('Europe/Moscow')
-    ->setDirectory(date('Ymd'))
+    ->setDirectory('data' . DIRECTORY_SEPARATOR . date('Ymd'))
     ->setParser(new \Cme\Parser())
     ->setSymbols($symbols)
     ->setMonth('AUG14');

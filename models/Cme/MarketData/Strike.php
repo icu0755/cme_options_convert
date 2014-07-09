@@ -3,8 +3,6 @@
 namespace Cme\MarketData;
 
 
-require_once 'RowAbstract.php';
-
 class Strike extends RowAbstract
 {
     protected $type = 'strike';
