@@ -15,9 +15,9 @@ class Parser
     protected $marketData;
     protected $handle;
 
-    public function getMarketDataRow()
+    public function getMarketDataRow($row = null)
     {
-        $row = fgets($this->handle);
+        if (!$row) $row = fgets($this->handle);
         if ($row) {
             switch ($this->getMarketDataRowType($row)) {
                 case 'strike':
@@ -44,6 +44,15 @@ class Parser
         }
 
         return $type;
+    }
+
+    public function hasOptionFound($marketDataRow)
+    {
+        $hasFound = false;
+        if ($marketDataRow->isOption() && $this->month == $marketDataRow->getMonth() && $this->code == $marketDataRow->getCode()) {
+            $hasFound = true;
+        }
+        return $hasFound;
     }
 
     public function parse()
