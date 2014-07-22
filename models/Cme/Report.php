@@ -73,7 +73,7 @@ class Report
         }
     }
 
-    protected function format($strike, $put, $call)
+    public function format($strike, $put, $call)
     {
         return $strike . ';' . $put . ';' . $call . PHP_EOL;
     }

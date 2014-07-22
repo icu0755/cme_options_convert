@@ -40,4 +40,10 @@ class OptionTest extends PHPUnit_Framework_TestCase
         $this->option = new Cme\MarketData\Option($row);
         $this->assertEquals('put', $this->option->getOptionType());
     }
+
+    public function testIsOptionTrue()
+    {
+        $this->assertTrue($this->option->isType('option'));
+        $this->assertTrue($this->option->isOption());
+    }
 }
