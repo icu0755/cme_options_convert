@@ -79,6 +79,14 @@ class Report
     }
 
     /**
+     * @param string $filename
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+    }
+
+    /**
      * @param mixed $minInterest
      */
     public function setMinInterest($minInterest)

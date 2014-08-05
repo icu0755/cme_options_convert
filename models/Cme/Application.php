@@ -38,7 +38,8 @@ class Application
             $this->debug('Process symbol: ' . $symbol);
             $time = time();
 
-            $report = new ReportHtml($symbol);
+            $reportFileName = $this->getReportFileName($this->month, $symbol);
+            $report = new ReportHtml($reportFileName);
             $this->parser->setCode($code)->setReport($report);
             $this->parser->parse();
 
@@ -86,5 +87,11 @@ class Application
     {
         $this->month = $month;
         return $this;
+    }
+
+    public function getReportFileName($month, $symbol)
+    {
+        $month = strtoupper($month);
+        return "{$month}_{$symbol}";
     }
 }

@@ -3,6 +3,14 @@
 
 class ApplicationTest extends PHPUnit_Framework_TestCase
 {
+    public $application;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->application = new \Cme\Application();
+    }
+
     public function testRun()
     {
         $month = 'AUG14';
@@ -39,5 +47,13 @@ class ApplicationTest extends PHPUnit_Framework_TestCase
             ->setSymbols($symbols)
             ->setMonth($month);
         $app->run();
+    }
+
+    public function testGetReportFileName()
+    {
+        $symbol = 'audusd';
+        $month = 'aug14';
+        $filename = $this->application->getReportFileName($month, $symbol);
+        $this->assertEquals('AUG14_audusd', $filename);
     }
 }
