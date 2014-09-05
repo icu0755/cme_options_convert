@@ -16,7 +16,4 @@ $app->setTimezone('Europe/Moscow')
     ->setDirectory('data' . DIRECTORY_SEPARATOR . date('Ymd'))
     ->setParser(new \Cme\Parser())
     ->setSymbols($symbols)
-    ->setMonth('AUG14');
-$app->getMarketData();
-$app->run();
-
+    ->getMarketData();
