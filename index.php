@@ -17,3 +17,6 @@ $app->setTimezone('Europe/Moscow')
     ->setParser(new \Cme\Parser())
     ->setSymbols($symbols)
     ->getMarketData();
+
+$app->setMonth('SEP14')->run();
+$app->setMonth('NOV14')->run();
