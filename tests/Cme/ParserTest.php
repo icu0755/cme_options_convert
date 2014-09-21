@@ -59,6 +59,17 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_a($object, $class));
     }
 
+    public function testGetMarketDataRowTypeEmptyOrNull()
+    {
+        $this->assertFalse($this->parser->getMarketDataRowType(''));
+        $this->assertFalse($this->parser->getMarketDataRowType(null));
+    }
+
+    public function testGetMarketDataRowEmptyOrNull()
+    {
+        $this->assertFalse($this->parser->getMarketDataRow(''));
+        $this->assertFalse($this->parser->getMarketDataRow(null));
+    }
 
     public function testHasFoundOption()
     {
@@ -83,13 +94,27 @@ class ParserTest extends PHPUnit_Framework_TestCase
     {
         $data = dirname(__DIR__) . '/data/stlcur.txt';
 
-        $reportStub = $this->getMock('\Cme\Report', array('addStrike'), array('eurusd'));
-        $reportStub->expects($this->exactly(130))->method('addStrike');
-
+        $this->parser = $this->getMock('\Cme\Parser', array('addOptionStrikesToReport'));
+        $reportStub = $this->getMockBuilder('\Cme\Report')->disableOriginalConstructor()->getMock();
         $this->parser->setMarketData($data);
         $this->parser->setReport($reportStub);
         $this->parser->setMonth('AUG14');
         $this->parser->setCode('ZC');
+
+        $this->parser->expects($this->exactly(2))->method('addOptionStrikesToReport');
         $this->parser->parse();
+    }
+
+    public function testAddOptionStrikesToReport()
+    {
+        $data = dirname(__DIR__) . '/data/strikes_only.txt';
+
+        $reportStub = $this->getMock('\Cme\Report', array('addStrike'), array('eurusd'));
+        $reportStub->expects($this->exactly(65))->method('addStrike');
+
+        $this->parser->setReport($reportStub);
+        $this->parser->fopen($data);
+        $this->parser->addOptionStrikesToReport('put');
+        $this->parser->fclose();
     }
 }

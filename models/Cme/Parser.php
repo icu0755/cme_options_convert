@@ -15,9 +15,19 @@ class Parser
     protected $marketData;
     protected $handle;
 
-    public function getMarketDataRow($row = null)
+    public function fclose()
     {
-        if (!$row) $row = fgets($this->handle);
+        fclose($this->handle);
+    }
+
+    public function fopen($file)
+    {
+        $this->marketData = $file;
+        $this->handle = fopen($this->marketData, 'r');
+    }
+
+    public function getMarketDataRow($row)
+    {
         if ($row) {
             switch ($this->getMarketDataRowType($row)) {
                 case 'strike':
@@ -29,6 +39,8 @@ class Parser
                 default:
                     $row = new \Cme\MarketData\Other($row);
             }
+        } else {
+            $row = false;
         }
 
         return $row;
@@ -36,11 +48,14 @@ class Parser
 
     public function getMarketDataRowType($row)
     {
-        $type = 'other';
-        if (false !== strpos($row, 'OPTIONS')) {
-            $type = 'option';
-        } elseif (is_numeric(trim(substr($row, 0, 7)))) {
-            $type = 'strike';
+        $type = false;
+        if ($row) {
+            $type = 'other';
+            if (false !== strpos($row, 'OPTIONS')) {
+                $type = 'option';
+            } elseif (is_numeric(trim(substr($row, 0, 7)))) {
+                $type = 'strike';
+            }
         }
 
         return $type;
@@ -59,15 +74,22 @@ class Parser
     {
         $this->handle = fopen($this->marketData, 'r');
         if ($this->handle) {
-            while ($r = $this->getMarketDataRow()) {
-                if ($r->isOption() && $this->month == $r->getMonth() && $this->code == $r->getCode()) {
-                    $optionType = $r->getOptionType();
-                    for ($r = $this->getMarketDataRow(); !is_null($r) && $r->isStrike(); $r = $this->getMarketDataRow()) {
-                        $this->report->addStrike($optionType, $r);
-                    }
+            while ($s = fgets($this->handle)) {
+                $token = $this->getMarketDataRow($s);
+                if ($this->hasOptionFound($token)) {
+                    $this->addOptionStrikesToReport($token->getOptionType());
                 }
             }
             fclose($this->handle);
+        }
+    }
+
+    public function addOptionStrikesToReport($type)
+    {
+        while ($s = fgets($this->handle)) {
+            $token = $this->getMarketDataRow($s);
+            if (!$token->isStrike()) break;
+            $this->report->addStrike($type, $token);
         }
     }
 
