@@ -48,6 +48,11 @@ class Report
         return 0 == $count ? 0 : round($sum/$count);
     }
 
+    public function getStrikes()
+    {
+        return $this->strikes;
+    }
+
     public function save()
     {
         if ($this->handle = fopen($this->filename, 'w')) {
