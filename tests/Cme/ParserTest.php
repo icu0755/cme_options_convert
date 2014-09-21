@@ -1,5 +1,6 @@
 <?php
 
+use \Cme\Parser;
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {
@@ -10,7 +11,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->parser = new Cme\Parser;
+        $this->parser = new Parser;
     }
 
     public function tearDown()
@@ -18,47 +19,77 @@ class ParserTest extends PHPUnit_Framework_TestCase
         $this->parser = null;
     }
 
-    public function testGetMarketDataRowTypeOption()
+    public function tokenTypeProvider()
     {
-        $row = "XA AUG14 EUROPEAN AUSTRALIAN DOLLAR OPTIONS CALL\n";
-        $this->assertEquals('option', $this->parser->getMarketDataRowType($row));
+        return array(
+            array('XA AUG14 EUROPEAN AUSTRALIAN DOLLAR OPTIONS CALL', 'option', '\Cme\MarketData\Option'),
+            array('10000      ----      ----      ----      ----       CAB    UNCH                    CAB\n', 'strike', '\Cme\MarketData\Strike'),
+            array('Foo Bar', 'other', '\Cme\MarketData\Other'),
+        );
     }
 
-    public function testGetMarketDataRowTypeStrike()
+    public function getOptionMock($isOption, $getMonth, $getCode)
     {
-        $row = "10000      ----      ----      ----      ----       CAB    UNCH                    CAB\n";
-        $this->assertEquals('strike', $this->parser->getMarketDataRowType($row));
+        $stub = $this->getMockBuilder('\Cme\MarketData\Option')
+            ->disableOriginalConstructor()
+            ->setMethods(array('isOption', 'getMonth', 'getCode'))
+            ->getMock();
+
+        $stub->expects($this->any())->method('isOption')->will($this->returnValue($isOption));
+        $stub->expects($this->any())->method('getMonth')->will($this->returnValue($getMonth));
+        $stub->expects($this->any())->method('getCode')->will($this->returnValue($getCode));
+
+        return $stub;
     }
 
-    public function testGetMarketDataRowTypeOther()
+    /**
+     * @dataProvider tokenTypeProvider
+     */
+    public function testGetMarketDataRowType($token, $type, $class)
     {
-        $row = "ACD AUSTRALIAN DOLLAR/CANADIAN DOLLAR CROSSRATE FUT\n";
-        $this->assertEquals('other', $this->parser->getMarketDataRowType($row));
+        $this->assertEquals($type, $this->parser->getMarketDataRowType($token));
     }
+
+    /**
+     * @dataProvider tokenTypeProvider
+     */
+    public function testGetMarketDataRow($token, $type, $class)
+    {
+        $object = $this->parser->getMarketDataRow($token);
+        $this->assertTrue(is_a($object, $class));
+    }
+
 
     public function testHasFoundOption()
     {
         $this->parser->setMonth('AUG14')->setCode('ZC');
-        $row = "ZC AUG14 CME EURO FX OPTIONS CALL\n";
-        $marketDataRow = $this->parser->getMarketDataRow($row);
-        $this->assertTrue($this->parser->hasOptionFound($marketDataRow));
+
+        // Return true if it is an option of month AUG14 and code ZC ...
+        $stub = $this->getOptionMock(true, 'AUG14', 'ZC');
+        $this->assertTrue($this->parser->hasOptionFound($stub));
+
+        // ... and return false if one of the conditions were not met
+        $stub = $this->getOptionMock(false, 'AUG14', 'ZC');
+        $this->assertFalse($this->parser->hasOptionFound($stub));
+
+        $stub = $this->getOptionMock(true, 'SEP14', 'ZC');
+        $this->assertFalse($this->parser->hasOptionFound($stub));
+
+        $stub = $this->getOptionMock(true, 'AUG14', 'CD');
+        $this->assertFalse($this->parser->hasOptionFound($stub));
     }
 
-    public function testHasNotFoundOption()
+    public function testParse()
     {
-        $this->parser->setMonth('AUG14')->setCode('ZC');
-        $rows = array(
-            'ZC JUN14 CME EURO FX OPTIONS CALL',
-            'CC AUG14 CME EURO FX OPTIONS CALL',
-            'CC JUN14 CME EURO FX OPTIONS CALL',
-        );
+        $data = dirname(__DIR__) . '/data/stlcur.txt';
 
-        foreach ($rows as $row) {
-            $row .= "\n";
-            $marketDataRow = $this->parser->getMarketDataRow($row);
-            $this->assertFalse($this->parser->hasOptionFound($marketDataRow));
-        }
+        $reportStub = $this->getMock('\Cme\Report', array('addStrike'), array('eurusd'));
+        $reportStub->expects($this->exactly(130))->method('addStrike');
 
+        $this->parser->setMarketData($data);
+        $this->parser->setReport($reportStub);
+        $this->parser->setMonth('AUG14');
+        $this->parser->setCode('ZC');
+        $this->parser->parse();
     }
-
 }
