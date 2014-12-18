@@ -109,8 +109,8 @@ class ParserTest extends PHPUnit_Framework_TestCase
     {
         $data = dirname(__DIR__) . '/data/strikes_only.txt';
 
-        $reportStub = $this->getMock('\Cme\Report', array('addStrike'), array('eurusd'));
-        $reportStub->expects($this->exactly(65))->method('addStrike');
+        $reportStub = $this->getMock('\Cme\Report', array('add'), array('eurusd'));
+        $reportStub->expects($this->exactly(65))->method('add');
 
         $this->parser->setReport($reportStub);
         $this->parser->fopen($data);

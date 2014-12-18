@@ -21,7 +21,7 @@ class ReportHtml extends Report
     public function save()
     {
         if ($this->handle = fopen($this->filename, 'w')) {
-            foreach ($this->strikes as $strike => $interest) {
+            foreach ($this->data as $strike => $interest) {
                 $this->putStrike($strike, $interest);
             }
             $content = $this->getContent();

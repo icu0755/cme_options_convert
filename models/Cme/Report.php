@@ -9,7 +9,7 @@ class Report
     protected $fileext = '.csv';
     protected $filename;
     protected $handle;
-    protected $strikes;
+    protected $data;
     protected $symbol;
     protected $minInterest;
 
@@ -19,23 +19,22 @@ class Report
         $filename = $this->symbol;
         if ($this->fileext !== substr($this->symbol, -4)) $filename .= $this->fileext;
         $this->filename = $filename;
-        $this->strikes = array();
+        $this->data = array();
     }
 
-    public function addStrike($type, \Cme\MarketData\Strike $strikeObj){
-        $strike = $strikeObj->getStrike();
-        $interest = $strikeObj->getInterest();
-        if (!isset($this->strikes[$strike])) {
-            $this->strikes[$strike] = array('call' => 0, 'put' => 0);
+    public function add($type, $strike, $data)
+    {
+        if (!isset($this->data[$strike])) {
+            $this->data[$strike] = array('call' => 0, 'put' => 0);
         }
 
-        $this->strikes[$strike][$type] = $interest;
+        $this->data[$strike][$type] = $data;
     }
 
     public function getAverage()
     {
         $sum = $count = 0;
-        foreach ($this->strikes as $interest) {
+        foreach ($this->data as $interest) {
             if ($interest['call'] > 100) {
                 $sum += $interest['call'];
                 $count++;
@@ -48,16 +47,16 @@ class Report
         return 0 == $count ? 0 : round($sum/$count);
     }
 
-    public function getStrikes()
+    public function getData()
     {
-        return $this->strikes;
+        return $this->data;
     }
 
     public function save()
     {
         if ($this->handle = fopen($this->filename, 'w')) {
             $this->putHeader();
-            foreach ($this->strikes as $strike => $interest) {
+            foreach ($this->data as $strike => $interest) {
                 $this->putStrike($strike, $interest);
             }
             fclose($this->handle);
