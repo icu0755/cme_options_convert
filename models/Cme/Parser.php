@@ -88,8 +88,10 @@ class Parser
     {
         while ($s = fgets($this->handle)) {
             $token = $this->getMarketDataRow($s);
+
             if (!$token->isStrike()) break;
-            $this->report->addStrike($type, $token);
+
+            $this->report->add($type, $token->getStrike(), $token->getVolume());
         }
     }
 
