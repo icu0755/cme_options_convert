@@ -44,15 +44,11 @@ class Application
             $this->parser->parse();
 
             // save report
-            if ($avg = $report->getAverage()) {
-                $report->setMinInterest($avg);
-            }
             $report->save();
 
             // output statistics
             $time = time() - $time;
             $this->debug('Time: ' . $time . ' sec');
-            $this->debug('Average: ' . $avg);
         }
     }
 
