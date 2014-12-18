@@ -53,8 +53,7 @@ class ReportTest extends PHPUnit_Framework_TestCase
         foreach (array('call', 'put') as $type) {
             foreach (array(1300, 1310, 1320) as $strike) {
                 $interest = $assert[$strike][$type];
-                $strikeMock = $this->getStrikeMock($strike, $interest);
-                $this->report->add($type, $strikeMock);
+                $this->report->add($type, $strike, $interest);
             }
         }
 
@@ -69,8 +68,7 @@ class ReportTest extends PHPUnit_Framework_TestCase
         foreach (array('call', 'put') as $type) {
             foreach (array(1300, 1310, 1320) as $strike) {
                 $interest = $assert[$strike][$type];
-                $strikeMock = $this->getStrikeMock($strike, $interest);
-                $this->report->add($type, $strikeMock);
+                $this->report->add($type, $strike, $interest);
             }
         }
 
