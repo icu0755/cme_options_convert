@@ -2,6 +2,8 @@
 
 require_once 'vendor/autoload.php';
 
+const TIMES_TO_RUN = 3;
+
 $symbols = array(
     'ZA' => 'audusd',
     'OB' => 'gbpusd',
@@ -18,5 +20,9 @@ $app->setTimezone('Europe/Moscow')
     ->setSymbols($symbols)
     ->getMarketData();
 
-$app->setMonth('SEP14')->run();
-$app->setMonth('NOV14')->run();
+$monthInterval = new DateInterval('P30D');
+$date          = new DateTime();
+for ($i=0; $i<TIMES_TO_RUN; $i++) {
+    $strDate = $date->add($monthInterval)->format('My');
+    $app->setMonth(strtoupper($strDate))->run();
+}
