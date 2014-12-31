@@ -29,7 +29,7 @@ class MarketData
     {
         $type = false;
         if (is_string($data)) {
-            if (false !== strpos($data, 'OPTIONS')) {
+            if (false !== strpos($data, 'OPTION')) {
                 $type = static::OPTION;
             } elseif (is_numeric(trim(substr($data, 0, 7)))) {
                 $type = static::STRIKE;
