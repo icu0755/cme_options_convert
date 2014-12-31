@@ -4,15 +4,32 @@ namespace Cme\MarketData;
 
 class Option extends RowAbstract
 {
+    /**
+     * @var string
+     */
     protected $type = 'option';
 
+    /**
+     * @var string
+     */
     protected $code;
 
+    /**
+     * @var string
+     */
     protected $month;
 
+    /**
+     * @var string
+     */
     protected $optionType;
 
-    function __construct($row)
+    /**
+     * @var string
+     */
+    protected $bulletinDate;
+
+    public function __construct($row)
     {
         $row = explode(' ', trim($row));
         $this->code = array_shift($row);
@@ -47,5 +64,45 @@ class Option extends RowAbstract
     public function getOptionType()
     {
         return $this->optionType;
+    }
+
+    /**
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+    /**
+     * @param string $month
+     */
+    public function setMonth($month)
+    {
+        $this->month = $month;
+    }
+
+    /**
+     * @param string $optionType
+     */
+    public function setOptionType($optionType)
+    {
+        $this->optionType = $optionType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBulletinDate()
+    {
+        return $this->bulletinDate;
+    }
+
+    /**
+     * @param string $bulletinDate
+     */
+    public function setBulletinDate($bulletinDate)
+    {
+        $this->bulletinDate = $bulletinDate;
     }
 }
