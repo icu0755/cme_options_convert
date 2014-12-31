@@ -45,6 +45,8 @@ class BulletinParser
                         $this->addOptionStrikesToReport($token);
                     }
                 }
+            } else {
+                echo sprintf('Date %s ignored', $bulletinDate) . PHP_EOL;
             }
 
             fclose($this->handle);
