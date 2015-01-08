@@ -15,3 +15,5 @@ $capsule->addConnection([
                         ]);
 
 $capsule->bootEloquent();
+$capsule->setAsGlobal();
+$capsule->getConnection()->disableQueryLog();
