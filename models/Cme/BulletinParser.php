@@ -41,6 +41,7 @@ class BulletinParser
                 while ($data = fgets($this->handle)) {
                     $token = MarketData::make($data);
                     if ($token && $token->isOption()) {
+                        echo "Option found " . $token->getCode() . ' month ' . $token->getMonth() . PHP_EOL;
                         $token->setBulletinDate($bulletinDate);
                         $this->addOptionStrikesToReport($token);
                     }
@@ -55,6 +56,9 @@ class BulletinParser
 
     public function addOptionStrikesToReport(Option $option)
     {
+        // keep the position before reading a file
+        $position = ftell($this->handle);
+
         while ($data = fgets($this->handle)) {
             $token = MarketData::make($data);
 
@@ -68,7 +72,12 @@ class BulletinParser
             $token->loadOption($option);
 
             $this->report->add($token);
+
+            $position = ftell($this->handle);
         }
+
+        // restore the position as the option data has finished
+        fseek($this->handle, $position);
     }
 
     /**
