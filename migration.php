@@ -15,7 +15,7 @@ $builder->create('strikes', function($table) {
      */
     $table->increments('id');
     $table->date('bulletin_date');
-    $table->string('code', 2);
+    $table->string('code', 3);
     $table->string('month', 5);
     $table->enum('type', [\Cme\Eloquent\Strike::CALL, \Cme\Eloquent\Strike::PUT]);
     $table->integer('strike');
